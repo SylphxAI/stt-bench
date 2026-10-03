@@ -29,9 +29,13 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install pinned sherpa-onnx
-        run: python -m pip install --require-hashes --only-binary=:all: -r requirements.txt
+        run: |
+          python -m pip install --require-hashes --only-binary=:all: -r requirements.txt
       - name: Bench
-        run: python bench.py --label "${{ matrix.label }}" --out result-${{ matrix.runner }}.json
+        shell: bash
+        env:
+          LABEL: ${{ matrix.label }}
+        run: python bench.py --label "$LABEL" --out result-${{ matrix.runner }}.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: result-${{ matrix.runner }}
